@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gestorcondominio.msresidencial.exception.DataBaseException;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ResidencialService {
@@ -29,17 +30,29 @@ public class ResidencialService {
 
     @Transactional
     public ResidencialDTO saveResidencial(ResidencialDTO residencialDTO){
+        // Converter o DTO em uma entidade Residencial
         var residencialEntity = residencialDTO.toEntity(residencialDTO);
 
-        // Carrega os lazeres com base nos IDs fornecidos
-        List<Long> lazerIds = (List<Long>) residencialDTO.lazeres().get();
-        List<Lazer> lazeres = lazerRepository.findAllById(lazerIds);
+        // Carregar os lazeres com base nos IDs fornecidos
+        List<Lazer> lazeresList = lazerRepository.findAllById(
+                residencialDTO.lazeresId()
+                        .stream()
+                        .map(Lazer::getId)
+                        .collect(Collectors.toList()));
 
-        // Define os lazeres na entidade Residencial
-        residencialEntity.setLazeres(lazeres);
+        // Extrair os IDs dos objetos Lazer e transformar em uma lista de Long
+//                List<Long> lazeresIds = lazeresList.stream()
+//                        .map(Lazer::getId) // Extrai o ID de cada objeto Lazer
+//                        .collect(Collectors.toList());
 
+        // Definir os IDs dos lazeres na entidade Residencial
+                residencialEntity.setLazeres(lazeresList);
+
+        // Salvar a entidade Residencial no banco de dados
         var residencialSaved = residencialRepository.save(residencialEntity);
-        return residencialDTO.fromEntity(residencialSaved);
+
+        // Converter a entidade Residencial salva de volta para DTO e retornar
+        return ResidencialDTO.fromEntity(residencialSaved);
     }
 
 //    @Transactional

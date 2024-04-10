@@ -41,7 +41,10 @@ public record ResidencialDTO(
         //@JsonIgnore
         //List<String> lazer,
 
-        List<Lazer> lazeres, // Lista de IDs dos tipos de lazer associados
+        //List<Lazer> lazeres, // Lista de IDs dos tipos de lazer associados
+        List<Lazer> lazeresId, // Lista de IDs dos tipos de lazer associados
+        //List<Long> lazeres,
+
         BigDecimal valorCondominio,
 
         Boolean elevador,
@@ -61,6 +64,15 @@ public record ResidencialDTO(
         int quantidadeUnidadesComVeiculo
 ) {
 
+    // Método para retornar os IDs dos lazeres
+    public List<Lazer> lazeresId() {
+        if (this.lazeresId != null) {
+            return this.lazeresId;
+        } else {
+            return Collections.emptyList();
+        }
+    }
+//
         public ResidencialDTO (Residencial residencial) {
             this(
                     residencial.getId(),
@@ -74,10 +86,9 @@ public record ResidencialDTO(
                     //residencial.getSindico()
                     residencial.getLazeres(),
 
-//                    // Convertendo a lista de objetos Lazer em uma lista de IDs
 //                    residencial.getLazeres().stream()
-//                            .map(id -> new Lazer(id)) // Obtém o ID de cada objeto Lazer
-//                            .collect(Collectors.toList()), // Coleta os IDs em uma lista
+//                            .map(Lazer::getId) // Usando método de fábrica estático para criar objetos Lazer a partir dos IDs
+//                            .collect(Collectors.toList()),
 
                     residencial.getValorCondominio(),
 
@@ -109,7 +120,7 @@ public record ResidencialDTO(
                     entity.getLazeres(),
 
 //                    entity.getLazeres().stream()
-//                            .map(lazer -> new Lazer(lazer.getId(), ""))
+//                            .map(Lazer::getId) // Usando método de fábrica estático para criar objetos Lazer a partir dos IDs
 //                            .collect(Collectors.toList()),
 
                     entity.getValorCondominio(),
@@ -138,7 +149,7 @@ public record ResidencialDTO(
                     dto.uf,
 
                     //dto.sindico,
-                    dto.lazeres,
+                    dto.lazeresId,
                     dto.valorCondominio,
 
                     dto.elevador,
@@ -164,7 +175,7 @@ public record ResidencialDTO(
                     entity.setUf(dto.uf);
 
                     //entity.setSindico(dto.sindico);
-                    entity.setLazeres(dto.lazeres);
+                    entity.setLazeres(dto.lazeresId);
 
                     entity.setValorCondominio(dto.valorCondominio);
                     entity.setElevador(dto.elevador);
@@ -180,8 +191,14 @@ public record ResidencialDTO(
                     return entity;
         }
 
+    // Método para retornar os IDs dos lazeres
+//    public List<Long> lazeres() {
+//        return this.lazeres.stream()
+//                .map(Lazer::getId)
+//                .collect(Collectors.toList());
+//    }
+
     public void add(ResidencialDTO dto) {
     }
-
 
 }

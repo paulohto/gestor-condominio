@@ -33,7 +33,8 @@ public class Residencial {
             inverseJoinColumns = @JoinColumn(name = "lazer_id")
     )
     @JsonIgnoreProperties("residenciais")
-    private List<Lazer> lazeres;
+    private List<Lazer> lazeres; // precisa ser List<Lazer>
+    //private List<Long> lazeres;
     //private List<Lazer> lazeres = new ArrayList<>();
     //private List<Long> lazeres = new ArrayList<>();
 
