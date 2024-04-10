@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS tb_residencial (
     quantidade_unidades_utilizam_app INT,
     quantidade_unidades_com_pet INT,
     quantidade_unidades_com_veiculo INT,
+
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Timestamp for creation time
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP -- Timestamp for last update time
 );
@@ -51,6 +52,11 @@ CREATE TABLE IF NOT EXISTS residencial_lazer (
 -- Adiciona índice nas colunas "residencial_id" e "lazer_id" para melhorar a performance de consultas
 CREATE INDEX idx_residencial_id ON residencial_lazer (residencial_id);
 CREATE INDEX idx_lazer_id ON residencial_lazer (lazer_id);
+
+-- Adiciona as chaves estrangeiras
+ALTER TABLE residencial_lazer
+    ADD CONSTRAINT fk_residencial_id FOREIGN KEY (residencial_id) REFERENCES tb_residencial(id),
+    ADD CONSTRAINT fk_lazer_id FOREIGN KEY (lazer_id) REFERENCES tb_lazer(id);
 
 -- Reinicia a sequência para a tabela residencial_lazer
 ALTER SEQUENCE residencial_lazer_residencial_id_seq RESTART WITH (SELECT COALESCE(MAX(residencial_id), 0) + 1 FROM residencial_lazer);

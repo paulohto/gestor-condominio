@@ -9,17 +9,18 @@ import java.util.List;
 import java.util.Objects;
 
 public record ResidencialLazerDTO(
-        Long idResidencial,
+        //Long idResidencial,
         List<Long> idsLazeres
 ) {
 
     public ResidencialLazerDTO {
-        Objects.requireNonNull(idResidencial, "ID do residencial não pode ser nulo");
+        Objects.requireNonNull(idsLazeres, "IDs dos lazeres não podem ser nulos");
     }
+
 
     public Residencial toEntity() {
         Residencial residencial = new Residencial();
-        residencial.setId(idResidencial);
+        //residencial.setId(idResidencial);
         // A lista de lazeres será tratada no serviço ao carregar os lazeres com base nos IDs
         return residencial;
     }
@@ -27,6 +28,6 @@ public record ResidencialLazerDTO(
     public static ResidencialLazerDTO fromEntity(Residencial residencial) {
         Objects.requireNonNull(residencial, "Residencial não pode ser nulo");
         // Neste caso, como não temos a informação dos IDs dos lazeres, vamos passar uma lista vazia
-        return new ResidencialLazerDTO(residencial.getId(), Collections.emptyList());
+        return new ResidencialLazerDTO(Collections.emptyList());
     }
 }

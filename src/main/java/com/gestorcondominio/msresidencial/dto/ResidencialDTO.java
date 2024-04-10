@@ -106,10 +106,11 @@ public record ResidencialDTO(
 
                     //entity.getSindico()
                     //entity.getLazer(),
-                    //entity.getLazeres(),
-                    entity.getLazeres().stream()
-                            .map(lazer -> new Lazer(lazer.getId(), ""))
-                            .collect(Collectors.toList()),
+                    entity.getLazeres(),
+
+//                    entity.getLazeres().stream()
+//                            .map(lazer -> new Lazer(lazer.getId(), ""))
+//                            .collect(Collectors.toList()),
 
                     entity.getValorCondominio(),
 

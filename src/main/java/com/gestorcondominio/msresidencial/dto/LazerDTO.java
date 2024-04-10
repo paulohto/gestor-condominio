@@ -7,7 +7,6 @@ import com.gestorcondominio.msresidencial.entity.Residencial;
 import jakarta.validation.constraints.NotEmpty;
 
 public record LazerDTO(
-
         Long id,
 
         @NotEmpty(message = "Descrição não pode ser nulo ou em branco")
