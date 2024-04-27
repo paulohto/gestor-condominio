@@ -1,7 +1,6 @@
 package com.gestorcondominio.msresidencial.controller;
 
 import com.gestorcondominio.msresidencial.dto.LazerDTO;
-import com.gestorcondominio.msresidencial.dto.ResidencialDTO;
 import com.gestorcondominio.msresidencial.service.LazerService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;

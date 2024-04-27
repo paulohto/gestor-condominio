@@ -1,14 +1,13 @@
 package com.gestorcondominio.msresidencial.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.gestorcondominio.msresidencial.dto.LazerDTO;
 import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.Instant;
+import java.util.*;
 
 @Data
 @Entity
@@ -18,7 +17,6 @@ public class Residencial {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String nome;
     private String endereco;
     private String cep;
@@ -26,17 +24,13 @@ public class Residencial {
     private String cidade;
     private String uf;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany (fetch = FetchType.EAGER)
     @JoinTable(
             name = "residencial_lazer",
             joinColumns = @JoinColumn(name = "residencial_id"),
             inverseJoinColumns = @JoinColumn(name = "lazer_id")
     )
-    @JsonIgnoreProperties("residenciais")
-    private List<Lazer> lazeres; // precisa ser List<Lazer>
-    //private List<Long> lazeres;
-    //private List<Lazer> lazeres = new ArrayList<>();
-    //private List<Long> lazeres = new ArrayList<>();
+    Set<Lazer> lazeres = new HashSet<>();
 
     private BigDecimal valorCondominio;
     private Boolean elevador;
@@ -53,10 +47,11 @@ public class Residencial {
     private int quantidadeUnidadesComPet;
     private int quantidadeUnidadesComVeiculo;
 
-    // Construtor padrão sem argumentos
-    public Residencial() {}
+    @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
+    private Instant dataDeCriacao;
 
-    // Construtor com argumentos
+     public Residencial() {}
+
     public Residencial(
             Long id,
             String nome,
@@ -66,9 +61,6 @@ public class Residencial {
             String cidade,
             String uf,
 
-            //List<String> lazer,
-            //String lazer,
-            //List<Long> lazer,
             BigDecimal valorCondominio,
 
             boolean elevador,
@@ -81,7 +73,9 @@ public class Residencial {
             int quantidadePublico,
             int quantidadeUnidadesUtilizamApp,
             int quantidadeUnidadesComPet,
-            int quantidadeUnidadesComVeiculo
+            int quantidadeUnidadesComVeiculo,
+
+            Instant dataDeCriacao
     ){
         this.id = id;
         this.nome = nome;
@@ -90,16 +84,7 @@ public class Residencial {
         this.bairro = bairro;
         this.cidade = cidade;
         this.uf = uf;
-
-        //this.lazer = lazer;
-        //this.lazeres = lazer;
-
-       // this.lazeres = new ArrayList<>();
-//        Lazer lazer1 = new Lazer();
-//        this.lazeres.add(lazer1);
-
         this.valorCondominio = valorCondominio;
-
         this.elevador = elevador;
         this.empresaPortaria = empresaPortaria;
         this.empresaZeladoria = empresaZeladoria;
@@ -110,9 +95,16 @@ public class Residencial {
         this.quantidadeUnidadesUtilizamApp = quantidadeUnidadesUtilizamApp;
         this.quantidadeUnidadesComPet = quantidadeUnidadesComPet;
         this.quantidadeUnidadesComVeiculo = quantidadeUnidadesComVeiculo;
+        this.dataDeCriacao = dataDeCriacao;
     }
 
-    public Residencial(Long id, String nome, String endereco, String cep, String bairro, String cidade, String uf, List<Lazer> lazeres, BigDecimal valorCondominio, Boolean elevador, String empresaPortaria, String empresaZeladoria, String empresaVigilancia, String empresaBoletos, int quantidadeUnidades, int quantidadePublico, int quantidadeUnidadesUtilizamApp, int quantidadeUnidadesComPet, int quantidadeUnidadesComVeiculo) {
+    public Set<Lazer> getLazeres() {
+        return lazeres;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        dataDeCriacao = Instant.now();
     }
 
 }

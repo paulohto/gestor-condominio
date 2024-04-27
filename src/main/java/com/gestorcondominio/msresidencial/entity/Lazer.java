@@ -6,8 +6,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gestorcondominio.msresidencial.dto.LazerDTO;
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -19,36 +23,29 @@ public class Lazer {
 
     private String descricao;
 
-    @ManyToMany(mappedBy = "lazeres", fetch = FetchType.EAGER)
-    @JsonIgnoreProperties("lazeres")
-    private List<Residencial> residenciais;
-    //private List<Residencial> residenciais = new ArrayList<>();
+    @ManyToMany(mappedBy = "lazeres" , fetch = FetchType.EAGER)
+    private Set<Residencial> residenciais = new HashSet<>();
 
-    public Lazer() {
-    }
+//    @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
+//    private Instant dataDeCriacao;
 
-    @JsonCreator
-    public Lazer(@JsonProperty("id") Long id, @JsonProperty("descricao") String descricao) {
+    public Lazer() {}
+
+    public Lazer(Long id, String descricao /*, Instant dataDeCriacao*/) {
+        super(); // DEV SUP - DICA DE AULA
         this.id = id;
         this.descricao = descricao;
+        //this.dataDeCriacao = dataDeCriacao;
     }
 
-//    @JsonCreator
-//    public Lazer(Long id, String descricao) {
-//        super(); // da video-alua
-//        this.id = id;
-//        this.descricao = descricao;
+    public Set<Residencial> getResidenciais(){
+        return residenciais;
+    }
+
+//    @PrePersist
+//    public void prePersist() {
+//        dataDeCriacao = Instant.now();
 //    }
-
-    public Lazer(Long id) {
-    }
-
-//    @JsonCreator
-    public static Lazer createFromId(Long id) {
-        Lazer lazer = new Lazer();
-        lazer.setId(id);
-        return lazer;
-    }
 
 
 }

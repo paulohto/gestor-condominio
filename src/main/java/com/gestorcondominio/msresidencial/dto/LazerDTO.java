@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gestorcondominio.msresidencial.entity.Lazer;
 import com.gestorcondominio.msresidencial.entity.Residencial;
 import jakarta.validation.constraints.NotEmpty;
+import lombok.Data;
 
 public record LazerDTO(
         Long id,
@@ -19,9 +20,9 @@ public record LazerDTO(
         }
     }
 
-    public static Lazer createFromId(Long id) {
-        return new Lazer(id);
-    }
+//    public static Lazer createFromId(Long id) {
+//        return new Lazer(id);
+//    }
 
     public LazerDTO (Lazer lazer) {
         this(
@@ -39,16 +40,27 @@ public record LazerDTO(
 
     public static Lazer toEntity(LazerDTO dto){
         return new Lazer(
-                dto.id,
-                dto.descricao
+                dto.id(),
+                dto.descricao()
         );
     }
+
+    @Override
+    public Long id() {
+        return id;
+    }
+
+    @Override
+    public String descricao() {
+        return descricao;
+    }
+
+
 
     public static Lazer mapperDTOtoEntity(LazerDTO dto, Lazer entity) {
         entity.setId(dto.id);
         entity.setDescricao(dto.descricao);
         return entity;
     }
-
 
 }
