@@ -36,11 +36,12 @@ public class ResidencialService {
 
     @Transactional(readOnly = true)
     public Page<CResidencialDTO> findAll(PageRequest pageRequest){
+//        Procedimento anterior sem findResidenciaisLazeres
+//        var residenciais = residencialRepository.findAll(pageRequest);
+//        return residenciais.map(x -> new CResidencialDTO(x, x.getLazeres()));
         var residenciais = residencialRepository.findAll(pageRequest);
+        residencialRepository.findResidenciaisLazeres(residenciais.stream().collect(Collectors.toList()));
         return residenciais.map(x -> new CResidencialDTO(x, x.getLazeres()));
-
-//        var residenciais = residencialRepository.findResidenciaisLazeres(pageRequest);
-//        return residenciais.map(x -> new CResidencialDTO(x));
 
     }
 

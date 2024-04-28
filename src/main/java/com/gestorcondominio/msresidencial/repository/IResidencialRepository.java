@@ -13,8 +13,10 @@ import java.util.Set;
 
 @Repository
 public interface IResidencialRepository extends JpaRepository<Residencial, Long> {
-
-//    @Query("SELECT obj FROM Residencial obj FETCH obj.lazeres")
+//    @Query("SELECT obj FROM Residencial obj LEFT JOIN FETCH obj.lazeres")
 //    Page<Residencial> findResidenciaisLazeres(Pageable pageable);
+
+    @Query("SELECT obj FROM Residencial obj LEFT JOIN FETCH obj.lazeres WHERE obj IN :residenciais")
+    List<Residencial> findResidenciaisLazeres(List<Residencial> residenciais);
 
 }

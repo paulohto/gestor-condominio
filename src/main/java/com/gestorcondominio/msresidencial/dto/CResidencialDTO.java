@@ -92,9 +92,9 @@ public class CResidencialDTO {
                 this.cidade = entity.getCidade();
                 this.uf = entity.getUf();
 
-                //this.lazeres = entity.getLazeres();
+//               this.lazeres = entity.getLazeres();
 
-//                this.lazeresId = entity.getLazeres().stream()
+//                this.lazeres = entity.getLazeres().stream()
 //                        .map(CLazerDTO::fromEntity)
 //                        .collect(Collectors.toList());
 

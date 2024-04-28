@@ -1,6 +1,7 @@
 package com.gestorcondominio.msresidencial.entity;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gestorcondominio.msresidencial.dto.LazerDTO;
@@ -23,7 +24,8 @@ public class Lazer {
 
     private String descricao;
 
-    @ManyToMany(mappedBy = "lazeres" , fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "lazeres" /*, fetch = FetchType.EAGER*/)
+    @JsonIgnore
     private Set<Residencial> residenciais = new HashSet<>();
 
 //    @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")

@@ -1,5 +1,7 @@
 package com.gestorcondominio.msresidencial.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gestorcondominio.msresidencial.dto.CResidencialDTO;
 import com.gestorcondominio.msresidencial.dto.LazerDTO;
 import jakarta.persistence.Entity;
@@ -25,12 +27,13 @@ public class Residencial {
     private String cidade;
     private String uf;
 
-    @ManyToMany (fetch = FetchType.EAGER)
+    @ManyToMany /*(fetch = FetchType.EAGER)*/
     @JoinTable(
             name = "residencial_lazer",
             joinColumns = @JoinColumn(name = "residencial_id"),
             inverseJoinColumns = @JoinColumn(name = "lazer_id")
     )
+    @JsonIgnoreProperties("residenciais")
     Set<Lazer> lazeres = new HashSet<>();
 
     private BigDecimal valorCondominio;

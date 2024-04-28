@@ -22,24 +22,8 @@ public class ResidencialController {
         this.residencialService = residencialService;
     }
 
-//    @PostMapping("/save")
-//    public ResponseEntity<ResidencialDTO> saveResidencial(@Valid @RequestBody ResidencialDTO residencialDTO){
-//        var residencialSaved = residencialService.saveResidencial(residencialDTO);
-//        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("{/id}").buildAndExpand(residencialSaved.id()).toUri();
-//        return ResponseEntity.created(uri).body(residencialSaved);
-//    }
-
-//    @PostMapping("/save")
-//    public ResponseEntity<ResidencialDTO> saveResidencial(@Valid @RequestBody ResidencialLazerDTO residencialLazerDTO) {
-//        log.info("Recebendo residencialLazerDTO: {}");
-//        var residencialSaved = residencialService.saveResidencial(residencialLazerDTO);
-//        log.info("Residencial salvo: {}");
-//        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(residencialSaved.id()).toUri();
-//        return ResponseEntity.created(uri).body(residencialSaved);
-//    }
-
-        @PostMapping("/save")
-        public ResponseEntity<CResidencialDTO> saveResidencial(@Valid @RequestBody CResidencialDTO residencialDTO){
+    @PostMapping("/save")
+    public ResponseEntity<CResidencialDTO> saveResidencial(@Valid @RequestBody CResidencialDTO residencialDTO){
         var residencialSaved = residencialService.saveResidencial(residencialDTO);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("{/id}").buildAndExpand(residencialSaved.getId()).toUri();
         return ResponseEntity.created(uri).body(residencialSaved);
