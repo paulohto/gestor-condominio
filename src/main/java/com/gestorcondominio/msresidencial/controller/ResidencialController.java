@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/residencial")
@@ -52,7 +53,6 @@ public class ResidencialController {
         PageRequest pageRequest = PageRequest.of(page,size);
         var residenciais = residencialService.findAll(pageRequest);
         return ResponseEntity.ok(residenciais);
-
     }
 
     @GetMapping("/findbyid/{id}")

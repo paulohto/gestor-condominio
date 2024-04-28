@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.gestorcondominio.msresidencial.exception.DataBaseException;
 
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,6 +39,9 @@ public class ResidencialService {
         var residenciais = residencialRepository.findAll(pageRequest);
         return residenciais.map(x -> new CResidencialDTO(x, x.getLazeres()));
 
+//        var residenciais = residencialRepository.findResidenciaisLazeres(pageRequest);
+//        return residenciais.map(x -> new CResidencialDTO(x));
+
     }
 
     @Transactional(readOnly = true)
@@ -57,11 +62,9 @@ public class ResidencialService {
 //
 //        var teste = residencial.getLazeres().stream()
 //                .map(x -> new Lazer(x.getId(), x.getDescricao())).collect(Collectors.toSet());
-        residencial.getLazeres().size();
+
+        //residencial.getLazeres().size();
         return new CResidencialDTO( residencial, residencial.getLazeres() );
-
-
-
 
     }
 

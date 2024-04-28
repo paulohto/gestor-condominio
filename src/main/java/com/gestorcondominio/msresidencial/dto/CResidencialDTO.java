@@ -124,6 +124,7 @@ public class CResidencialDTO {
         return lazeres;
     }
 
+
 //    public static CResidencialDTO fromEntity(Residencial entity){
 //        return new CResidencialDTO(
 //                entity.getId(),

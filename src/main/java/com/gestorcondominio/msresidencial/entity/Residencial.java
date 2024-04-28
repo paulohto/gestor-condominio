@@ -1,5 +1,6 @@
 package com.gestorcondominio.msresidencial.entity;
 
+import com.gestorcondominio.msresidencial.dto.CResidencialDTO;
 import com.gestorcondominio.msresidencial.dto.LazerDTO;
 import jakarta.persistence.Entity;
 import jakarta.persistence.*;
@@ -61,8 +62,9 @@ public class Residencial {
             String cidade,
             String uf,
 
-            BigDecimal valorCondominio,
+            //Set<Lazer> lazeres,
 
+            BigDecimal valorCondominio,
             boolean elevador,
             String empresaPortaria,
             String empresaZeladoria,
@@ -84,6 +86,9 @@ public class Residencial {
         this.bairro = bairro;
         this.cidade = cidade;
         this.uf = uf;
+
+        this.lazeres = lazeres;
+
         this.valorCondominio = valorCondominio;
         this.elevador = elevador;
         this.empresaPortaria = empresaPortaria;
