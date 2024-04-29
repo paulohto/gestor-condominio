@@ -11,6 +11,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/residencial")
@@ -45,6 +46,7 @@ public class ResidencialController {
         return ResponseEntity.ok(residencial);
         //return ResponseEntity.ok().body(residencial);
     }
+
 
     @PutMapping("/update/{id}")
     public ResponseEntity<CResidencialDTO> residencialUpdate(

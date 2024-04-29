@@ -54,7 +54,7 @@ public class CResidencialDTO {
 
     public CResidencialDTO(
             Long id, String nome, String endereco, String cep, String bairro, String cidade, String uf,
-            List<CLazerDTO> lazeres,
+            /*List<CLazerDTO> lazeres,*/
             BigDecimal valorCondominio, Boolean elevador, String empresaPortaria, String empresaZeladoria,
             String empresaVigilancia, String empresaBoletos, int quantidadeUnidades, int quantidadePublico,
             int quantidadeUnidadesUtilizamApp, int quantidadeUnidadesComPet, int quantidadeUnidadesComVeiculo
@@ -68,7 +68,7 @@ public class CResidencialDTO {
         this.cidade = cidade;
         this.uf = uf;
 
-        this.lazeres = lazeres;
+        //this.lazeres = lazeres;
 
         this.valorCondominio = valorCondominio;
         this.elevador = elevador;
@@ -97,7 +97,6 @@ public class CResidencialDTO {
 //                this.lazeres = entity.getLazeres().stream()
 //                        .map(CLazerDTO::fromEntity)
 //                        .collect(Collectors.toList());
-
                 this.valorCondominio = entity.getValorCondominio();
 
                 this.elevador = entity.getElevador();

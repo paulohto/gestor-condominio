@@ -65,7 +65,7 @@ public class Residencial {
             String cidade,
             String uf,
 
-            //Set<Lazer> lazeres,
+            Set<Lazer> lazeres,
 
             BigDecimal valorCondominio,
             boolean elevador,

@@ -14,9 +14,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.gestorcondominio.msresidencial.exception.DataBaseException;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.logging.Logger;
 
 @Service
 public class ResidencialService {
@@ -42,29 +45,26 @@ public class ResidencialService {
         var residenciais = residencialRepository.findAll(pageRequest);
         residencialRepository.findResidenciaisLazeres(residenciais.stream().collect(Collectors.toList()));
         return residenciais.map(x -> new CResidencialDTO(x, x.getLazeres()));
-
     }
 
     @Transactional(readOnly = true)
     public CResidencialDTO findById(Long id){
-        var residencial = residencialRepository.findById(id)
+        //var residencial = residencialRepository.findById(id)
+        var residencial = residencialRepository.findResidencialByIdWithLazeres(id)
                 .orElseThrow(
                         () -> new DataBaseException("Residencial não encontrado com o ID: " + id)
                 );
-        //return CResidencialDTO.fromEntity(residencial);
-        //return new CResidencialDTO(residencial, residencial.getLazeres());
 
-//        var teste = residencial.getLazeres().stream()
-//                .map(x -> new Lazer(x.getId(), x.getDescricao())).collect(Collectors.toSet());
+        // Agora vamos logar os detalhes dos Lazeres, se houver
+        if (residencial.getLazeres() != null && !residencial.getLazeres().isEmpty()) {
+            logger.info("Lazeres encontrados para o residencial " + residencial.getNome() + ":");
+            for (Lazer lazer : residencial.getLazeres()) {
+                logger.info("ID do Lazer: " + lazer.getId() + ", Descrição do Lazer: " + lazer.getDescricao());
+            }
+        } else {
+            logger.info("Nenhum Lazer encontrado para o residencial " + residencial.getNome());
+        }
 
-//        var teste2 = residencial.getLazeres().stream().map(Lazer::getId).collect(Collectors.toList());
-//        var lazer = lazerRepository.findAll(teste2);
-//        var testelazer = lazer.map(x -> new CLazerDTO(x.getId(), x.getDescricao()));
-//
-//        var teste = residencial.getLazeres().stream()
-//                .map(x -> new Lazer(x.getId(), x.getDescricao())).collect(Collectors.toSet());
-
-        //residencial.getLazeres().size();
         return new CResidencialDTO( residencial, residencial.getLazeres() );
 
     }
@@ -72,7 +72,6 @@ public class ResidencialService {
     @Transactional
     public CResidencialDTO updateResidencial(Long id, CResidencialDTO residencialDTO){
         try{
-
             Residencial residencialEntity = residencialRepository.getReferenceById(id);
             mapperDTOtoEntity(residencialDTO, residencialEntity);
             residencialEntity = residencialRepository.save(residencialEntity);
@@ -115,13 +114,19 @@ public class ResidencialService {
         entity.setQuantidadeUnidadesComPet(dto.getQuantidadeUnidadesComPet());
         entity.setQuantidadeUnidadesComVeiculo(dto.getQuantidadeUnidadesComVeiculo());
 
+        // Inicializa a lista de lazêres
+        entity.setLazeres(new HashSet<>());
+
         entity.getLazeres().clear();
-        //return entity;
+        //entity.getLazeres();
 
         for (CLazerDTO lazerDTO: dto.getLazeres()) {
             Lazer lazer = lazerRepository.getOne(lazerDTO.getId());
             entity.getLazeres().add(lazer);
         }
     }
+
+    private static final Logger logger = Logger.getLogger(ResidencialService.class.getName());
+
 
 }
