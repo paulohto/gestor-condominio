@@ -1,9 +1,7 @@
 package com.gestorcondominio.msresidencial.service;
 
 import com.gestorcondominio.msresidencial.dto.LazerDTO;
-import com.gestorcondominio.msresidencial.dto.ResidencialDTO;
 import com.gestorcondominio.msresidencial.entity.Lazer;
-import com.gestorcondominio.msresidencial.entity.Residencial;
 import com.gestorcondominio.msresidencial.exception.DataBaseException;
 import com.gestorcondominio.msresidencial.repository.ILazerRepository;
 import jakarta.persistence.EntityNotFoundException;
