@@ -1,9 +1,6 @@
 package com.gestorcondominio.msresidencial.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.gestorcondominio.msresidencial.dto.CResidencialDTO;
-import com.gestorcondominio.msresidencial.dto.LazerDTO;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -27,14 +24,15 @@ public class Residencial {
     private String cidade;
     private String uf;
 
-    @ManyToMany /*(fetch = FetchType.EAGER)*/
+    @ManyToMany (fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
     @JoinTable(
             name = "residencial_lazer",
             joinColumns = @JoinColumn(name = "residencial_id"),
             inverseJoinColumns = @JoinColumn(name = "lazer_id")
     )
-    @JsonIgnoreProperties("residenciais")
-    Set<Lazer> lazeres = new HashSet<>();
+    //@JsonIgnoreProperties("residenciais") // Outra opção para evitar a recursão
+    @JsonManagedReference
+    private Set<Lazer> lazeres = new HashSet<>();
 
     private BigDecimal valorCondominio;
     private Boolean elevador;
@@ -65,7 +63,7 @@ public class Residencial {
             String cidade,
             String uf,
 
-            Set<Lazer> lazeres,
+            //Set<Lazer> lazeres,
 
             BigDecimal valorCondominio,
             boolean elevador,
@@ -90,7 +88,7 @@ public class Residencial {
         this.cidade = cidade;
         this.uf = uf;
 
-        this.lazeres = lazeres;
+        //this.lazeres = lazeres; //DELETAR
 
         this.valorCondominio = valorCondominio;
         this.elevador = elevador;
@@ -109,10 +107,26 @@ public class Residencial {
     public Set<Lazer> getLazeres() {
         return lazeres;
     }
+    public void setLazeres(Set<Lazer> lazeres) { this.lazeres = lazeres; }
 
     @PrePersist
     public void prePersist() {
         dataDeCriacao = Instant.now();
+    }
+    ///
+
+    // Apesar de ter a @Data foi necessário incluir para evitar recursão
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Residencial that = (Residencial) o;
+        return id != null && id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
 }

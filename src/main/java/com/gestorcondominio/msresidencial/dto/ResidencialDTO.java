@@ -2,11 +2,8 @@ package com.gestorcondominio.msresidencial.dto;
 
 import com.gestorcondominio.msresidencial.entity.Lazer;
 import com.gestorcondominio.msresidencial.entity.Residencial;
-import com.gestorcondominio.msresidencial.repository.ILazerRepository;
-import jakarta.persistence.Entity;
 import jakarta.validation.constraints.*;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -15,7 +12,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Data
-public class CResidencialDTO {
+public class ResidencialDTO {
 
     private Long id;
     @NotEmpty(message = "Nome não pode ser nulo ou em branco")
@@ -35,7 +32,7 @@ public class CResidencialDTO {
     private String uf;
 
     //Sindico sindico;
-    private List<CLazerDTO> lazeres = new ArrayList<>();
+    private List<LazerDTO> lazeres = new ArrayList<>();
     private BigDecimal valorCondominio;
     private Boolean elevador;
     private String empresaPortaria;
@@ -50,16 +47,19 @@ public class CResidencialDTO {
     private int quantidadeUnidadesComPet;
     private int quantidadeUnidadesComVeiculo;
 
-    public CResidencialDTO(){}
+    public ResidencialDTO(){}
 
-    public CResidencialDTO(
+//    public ResidencialDTO(Long id, String nome, List<LazerDTO> lazereres) {
+//    }
+
+    public ResidencialDTO(
             Long id, String nome, String endereco, String cep, String bairro, String cidade, String uf,
-            /*List<CLazerDTO> lazeres,*/
+            List<LazerDTO> lazeres,
             BigDecimal valorCondominio, Boolean elevador, String empresaPortaria, String empresaZeladoria,
             String empresaVigilancia, String empresaBoletos, int quantidadeUnidades, int quantidadePublico,
             int quantidadeUnidadesUtilizamApp, int quantidadeUnidadesComPet, int quantidadeUnidadesComVeiculo
     ) {
-        super(); // DICA DEV SUPER
+        //super(); // DICA DEV SUPER
         this.id = id;
         this.nome = nome;
         this.endereco = endereco;
@@ -68,7 +68,7 @@ public class CResidencialDTO {
         this.cidade = cidade;
         this.uf = uf;
 
-        //this.lazeres = lazeres;
+        this.lazeres = lazeres;
 
         this.valorCondominio = valorCondominio;
         this.elevador = elevador;
@@ -83,7 +83,7 @@ public class CResidencialDTO {
         this.quantidadeUnidadesComVeiculo = quantidadeUnidadesComVeiculo;
     }
 
-    public CResidencialDTO (Residencial entity){
+    public ResidencialDTO(Residencial entity){
                 this.id = entity.getId();
                 this.nome = entity.getNome();
                 this.endereco = entity.getEndereco();
@@ -91,14 +91,7 @@ public class CResidencialDTO {
                 this.bairro = entity.getBairro();
                 this.cidade = entity.getCidade();
                 this.uf = entity.getUf();
-
-//               this.lazeres = entity.getLazeres();
-
-//                this.lazeres = entity.getLazeres().stream()
-//                        .map(CLazerDTO::fromEntity)
-//                        .collect(Collectors.toList());
                 this.valorCondominio = entity.getValorCondominio();
-
                 this.elevador = entity.getElevador();
                 this.empresaPortaria = entity.getEmpresaPortaria();
                 this.empresaZeladoria = entity.getEmpresaZeladoria();
@@ -114,73 +107,40 @@ public class CResidencialDTO {
                 //lazeres = entity.getLazeres().stream().map(x -> new CLazerDTO(x)).collect(Collectors.toList());
     }
 
-    public CResidencialDTO(Residencial residencial, Set<Lazer> lazeres) {
-        this(residencial);
-        lazeres.forEach(lazer -> this.lazeres.add(new CLazerDTO(lazer)));
+    public ResidencialDTO(Residencial residencial, Set<Lazer> lazeres) {
+        //this(residencial); // GUILHERME FIAP
+        //lazeres.forEach(lazer -> this.lazeres.add(new LazerDTO(lazer))); // GUILHERME FIAP
+
+        this.id = residencial.getId();
+        this.nome = residencial.getNome();
+        this.endereco = residencial.getEndereco();
+        this.cep = residencial.getCep();
+        this.bairro = residencial.getBairro();
+        this.cidade = residencial.getCidade();
+        this.uf = residencial.getUf();
+        this.valorCondominio = residencial.getValorCondominio();
+        this.elevador = residencial.getElevador();
+        this.empresaPortaria = residencial.getEmpresaPortaria();
+        this.empresaZeladoria = residencial.getEmpresaZeladoria();
+        this.empresaVigilancia = residencial.getEmpresaVigilancia();
+        this.empresaBoletos = residencial.getEmpresaBoletos();
+        this.quantidadeUnidades = residencial.getQuantidadeUnidades();
+        this.quantidadePublico = residencial.getQuantidadePublico();
+        this.quantidadeUnidadesUtilizamApp = residencial.getQuantidadeUnidadesUtilizamApp();
+        this.quantidadeUnidadesComPet = residencial.getQuantidadeUnidadesComPet();
+        this.quantidadeUnidadesComVeiculo = residencial.getQuantidadeUnidadesComVeiculo();
+
+        this.lazeres = lazeres.stream().map(LazerDTO::new).collect(Collectors.toList());
     }
 
-    public List<CLazerDTO> getLazeres() {
+    public List<LazerDTO> getLazeres() {
         return lazeres;
     }
+    public void setLazeres(List<LazerDTO> lazeres) {
 
-
-//    public static CResidencialDTO fromEntity(Residencial entity){
-//        return new CResidencialDTO(
-//                entity.getId(),
-//                entity.getNome(),
-//                entity.getEndereco(),
-//                entity.getCep(),
-//                entity.getBairro(),
-//                entity.getCidade(),
-//                entity.getUf(),
-//                entity.getLazeres(),
-//
-////                entity.getLazeres().stream()
-////                        .map(CLazerDTO::fromEntity)
-////                        .collect(Collectors.toList()),
-//
-//                entity.getValorCondominio(),
-//
-//                entity.getElevador(),
-//                entity.getEmpresaPortaria(),
-//                entity.getEmpresaZeladoria(),
-//                entity.getEmpresaVigilancia(),
-//                entity.getEmpresaBoletos(),
-//                entity.getQuantidadeUnidades(),
-//                entity.getQuantidadePublico(),
-//                entity.getQuantidadeUnidadesUtilizamApp(),
-//                entity.getQuantidadeUnidadesComPet(),
-//                entity.getQuantidadeUnidadesComVeiculo()
-//        );
-//    }
-
-//    public static Residencial toEntity(CResidencialDTO dto){
-//        return new Residencial(
-//                dto.id,
-//                dto.nome,
-//                dto.endereco,
-//                dto.cep,
-//                dto.bairro,
-//                dto.cidade,
-//                dto.uf,
-//
-//                dto.lazeresId.stream()
-//                        .map(LazerDTO::toEntity)
-//                        .collect(Collectors.toList()),
-//
-//                dto.valorCondominio,
-//                dto.elevador,
-//                dto.empresaPortaria,
-//                dto.empresaZeladoria,
-//                dto.empresaVigilancia,
-//                dto.empresaBoletos,
-//                dto.quantidadeUnidades,
-//                dto.quantidadePublico,
-//                dto.quantidadeUnidadesUtilizamApp,
-//                dto.quantidadeUnidadesComPet,
-//                dto.quantidadeUnidadesComVeiculo
-//        );
-//    }
+        this.lazeres = lazeres != null ? new ArrayList<>(lazeres) : new ArrayList<>();
+        //this.lazeres = lazeres;
+    }
 
 
 }

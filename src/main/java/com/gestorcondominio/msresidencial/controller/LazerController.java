@@ -22,9 +22,12 @@ public class LazerController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<LazerDTO> saveLazer(@Valid @RequestBody LazerDTO lazerDTO) {
+    public ResponseEntity<LazerDTO> saveLazer(
+            @Valid
+            @RequestBody LazerDTO lazerDTO)
+    {
         var lazerSaved = lazerService.saveLazer(lazerDTO);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("{/id}").buildAndExpand(lazerSaved.id()).toUri();
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(lazerDTO.getId()).toUri();
         return ResponseEntity.created(uri).body(lazerSaved);
     }
 
@@ -44,14 +47,14 @@ public class LazerController {
         return ResponseEntity.ok(lazer);
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<LazerDTO> lazerUpdate(
-            @Valid @PathVariable Long id,
-            @RequestBody LazerDTO lazerDTO)
-    {
-        var lazerUpdated = lazerService.updateLazer(id, lazerDTO);
-        return ResponseEntity.ok(lazerUpdated);
-    }
+//    @PutMapping("/update/{id}")
+//    public ResponseEntity<LazerDTO> lazerUpdate(
+//            @Valid @PathVariable Long id,
+//            @RequestBody LazerDTO lazerDTO)
+//    {
+//        var lazerUpdated = lazerService.updateLazer(id, lazerDTO);
+//        return ResponseEntity.ok(lazerUpdated);
+//    }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteLazer(@PathVariable Long id){

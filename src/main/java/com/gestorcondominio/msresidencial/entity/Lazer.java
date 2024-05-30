@@ -1,17 +1,11 @@
 package com.gestorcondominio.msresidencial.entity;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.gestorcondominio.msresidencial.dto.LazerDTO;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.Instant;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Data
@@ -24,8 +18,8 @@ public class Lazer {
 
     private String descricao;
 
-    @ManyToMany(mappedBy = "lazeres" /*, fetch = FetchType.EAGER*/)
-    @JsonIgnore
+    @ManyToMany(mappedBy = "lazeres", fetch = FetchType.LAZY)
+    @JsonBackReference
     private Set<Residencial> residenciais = new HashSet<>();
 
 //    @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
@@ -34,7 +28,6 @@ public class Lazer {
     public Lazer() {}
 
     public Lazer(Long id, String descricao /*, Instant dataDeCriacao*/) {
-        super(); // DEV SUP - DICA DE AULA
         this.id = id;
         this.descricao = descricao;
         //this.dataDeCriacao = dataDeCriacao;
@@ -43,11 +36,25 @@ public class Lazer {
     public Set<Residencial> getResidenciais(){
         return residenciais;
     }
+    public void setResidenciais(Set<Residencial> residenciais) { this.residenciais = residenciais; }
 
 //    @PrePersist
 //    public void prePersist() {
 //        dataDeCriacao = Instant.now();
 //    }
 
+    // Apesar de ter a @Data foi necessário incluir para evitar recursão
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Lazer lazer = (Lazer) o;
+        return id != null && id.equals(lazer.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 
 }

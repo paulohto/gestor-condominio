@@ -1,35 +1,36 @@
 package com.gestorcondominio.msresidencial.dto;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gestorcondominio.msresidencial.entity.Lazer;
-import com.gestorcondominio.msresidencial.entity.Residencial;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
-public record LazerDTO(
-        Long id,
+@Data
+public class LazerDTO {
+    private Long id;
+    @NotEmpty(message = "Descrição não pode ser nulo ou em branco")
+    private String descricao;
 
-        @NotEmpty(message = "Descrição não pode ser nulo ou em branco")
-        String descricao
-) {
+    public LazerDTO() {}
 
-    public LazerDTO {
-        if (descricao == null || descricao.trim().isEmpty()) {
-            throw new IllegalArgumentException("A descrição do lazer não pode ser nula ou vazia");
-        }
+    public LazerDTO(Long id, String descricao) {
+        //super(); // dica dev super
+        this.id = id;
+        this.descricao = descricao;
     }
+
+    public LazerDTO(Lazer entity) {
+        this.id = entity.getId();
+        this.descricao = entity.getDescricao();
+    }
+
 
 //    public static Lazer createFromId(Long id) {
 //        return new Lazer(id);
 //    }
 
-    public LazerDTO (Lazer lazer) {
-        this(
-                lazer.getId(),
-                lazer.getDescricao()
-        );
-    }
+//    public CLazerDTO(Lazer lazer) {
+//        this(lazer.getId(), lazer.getDescricao());
+//    }
 
     public static LazerDTO fromEntity(Lazer entity) {
         return new LazerDTO(
@@ -40,26 +41,14 @@ public record LazerDTO(
 
     public static Lazer toEntity(LazerDTO dto){
         return new Lazer(
-                dto.id(),
-                dto.descricao()
+                dto.getId(),
+                dto.getDescricao()
         );
     }
 
-    @Override
-    public Long id() {
-        return id;
-    }
-
-    @Override
-    public String descricao() {
-        return descricao;
-    }
-
-
-
-    public static Lazer mapperDTOtoEntity(LazerDTO dto, Lazer entity) {
-        entity.setId(dto.id);
-        entity.setDescricao(dto.descricao);
+    public Lazer mapperDTOtoEntity(LazerDTO dto, Lazer entity) {
+        entity.setId(dto.getId());
+        entity.setDescricao(dto.getDescricao());
         return entity;
     }
 
