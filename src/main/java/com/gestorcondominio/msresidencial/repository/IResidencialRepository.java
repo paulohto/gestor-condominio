@@ -26,7 +26,7 @@ public interface IResidencialRepository extends JpaRepository<Residencial, Long>
 
     @Query(value = "SELECT r.id as residencialId, l.id as lazerId, l.descricao as lazerDescricao " +
             "FROM tb_residencial r " +
-            "LEFT JOIN residencial_lazer rl ON r.id = rl.residencial_id " +
+            "LEFT JOIN tb_residencial_lazer rl ON r.id = rl.residencial_id " +
             "LEFT JOIN tb_lazer l ON rl.lazer_id = l.id " +
             "WHERE r.id = :id", nativeQuery = true)
     List<Object[]> findByResidencialId(Long id);
@@ -36,7 +36,7 @@ public interface IResidencialRepository extends JpaRepository<Residencial, Long>
 
     @Modifying
     @Transactional
-    @Query(value = "DELETE FROM residencial_lazer WHERE residencial_id = :residencialId", nativeQuery = true)
+    @Query(value = "DELETE FROM tb_residencial_lazer WHERE residencial_id = :residencialId", nativeQuery = true)
     void deleteAllLazerRelations(@Param("residencialId") Long residencialId);
 
     @Modifying

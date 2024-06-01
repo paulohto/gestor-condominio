@@ -13,7 +13,6 @@ public class LazerDTO {
     public LazerDTO() {}
 
     public LazerDTO(Long id, String descricao) {
-        //super(); // dica dev super
         this.id = id;
         this.descricao = descricao;
     }
@@ -22,15 +21,6 @@ public class LazerDTO {
         this.id = entity.getId();
         this.descricao = entity.getDescricao();
     }
-
-
-//    public static Lazer createFromId(Long id) {
-//        return new Lazer(id);
-//    }
-
-//    public CLazerDTO(Lazer lazer) {
-//        this(lazer.getId(), lazer.getDescricao());
-//    }
 
     public static LazerDTO fromEntity(Lazer entity) {
         return new LazerDTO(

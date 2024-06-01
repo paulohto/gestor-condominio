@@ -16,7 +16,6 @@ import java.net.URI;
 public class LazerController {
 
     private final LazerService lazerService;
-
     public LazerController(LazerService lazerService) {
         this.lazerService = lazerService;
     }
@@ -47,18 +46,18 @@ public class LazerController {
         return ResponseEntity.ok(lazer);
     }
 
-//    @PutMapping("/update/{id}")
-//    public ResponseEntity<LazerDTO> lazerUpdate(
-//            @Valid @PathVariable Long id,
-//            @RequestBody LazerDTO lazerDTO)
-//    {
-//        var lazerUpdated = lazerService.updateLazer(id, lazerDTO);
-//        return ResponseEntity.ok(lazerUpdated);
-//    }
+    @PutMapping("/update/{id}")
+    public ResponseEntity<LazerDTO> lazerUpdate(
+            @Valid @PathVariable Long id,
+            @RequestBody LazerDTO lazerDTO)
+    {
+        var lazerUpdated = lazerService.updateLazer(id, lazerDTO);
+        return ResponseEntity.ok(lazerUpdated);
+    }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteLazer(@PathVariable Long id){
-        lazerService.deleteLazerById(id);
+        lazerService.deleteLazer(id);
         return ResponseEntity.noContent().build();
     }
 

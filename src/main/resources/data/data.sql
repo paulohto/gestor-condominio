@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS tb_lazer (
 --    FOREIGN KEY (lazer_id) REFERENCES tb_lazer (id) ON DELETE CASCADE
 --);
 
-CREATE TABLE IF NOT EXISTS residencial_lazer (
+CREATE TABLE IF NOT EXISTS tb_residencial_lazer (
     residencial_id BIGINT NOT NULL,
     lazer_id BIGINT NOT NULL,
     PRIMARY KEY (residencial_id, lazer_id),

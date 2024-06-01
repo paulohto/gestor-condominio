@@ -59,7 +59,7 @@ public class ResidencialDTO {
             String empresaVigilancia, String empresaBoletos, int quantidadeUnidades, int quantidadePublico,
             int quantidadeUnidadesUtilizamApp, int quantidadeUnidadesComPet, int quantidadeUnidadesComVeiculo
     ) {
-        //super(); // DICA DEV SUPER
+
         this.id = id;
         this.nome = nome;
         this.endereco = endereco;

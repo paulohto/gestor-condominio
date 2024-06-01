@@ -11,7 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.gestorcondominio.msresidencial.exception.service.DatabaseException;
+import com.gestorcondominio.msresidencial.exception.service.DataBaseException;
 
 import java.util.stream.Collectors;
 import java.util.logging.Logger;
@@ -45,7 +45,7 @@ public class ResidencialService {
         var residencial = residencialRepository.findById(id)
         //var residencial = residencialRepository.findResidencialByIdAndLazeres(id)
                 .orElseThrow(
-                        () -> new DatabaseException("Residencial não encontrado com o ID: " + id)
+                        () -> new DataBaseException("Residencial não encontrado com o ID: " + id)
                 );
 
         // Agora vamos logar os detalhes dos Lazeres, se houver
@@ -103,16 +103,16 @@ public class ResidencialService {
 
             return new ResidencialDTO(residencialEntity, residencialEntity.getLazeres());
         } catch (EntityNotFoundException e) {
-            throw new DatabaseException("Residencial ou Lazer não encontrado com os IDs fornecidos.");
+            throw new DataBaseException("Residencial ou Lazer não encontrado com os IDs fornecidos.");
         }
     }
 
-    @Transactional
+    //@Transactional
     public void deleteResidencial(Long id) {
         try {
             // Verifique se o Residencial existe
             Residencial residencial = residencialRepository.findById(id)
-                    .orElseThrow(() -> new EntityNotFoundException("Residencial not found with ID: " + id));
+                    .orElseThrow(() -> new EntityNotFoundException("Residencial não encontrado com ID: " + id));
 
             // Deleta todos os relacionamentos com lazeres
             residencialRepository.deleteAllLazerRelations(id);
@@ -120,7 +120,7 @@ public class ResidencialService {
             // Deleta o Residencial
             residencialRepository.deleteResidencialById(id);
         } catch (EntityNotFoundException e) {
-            throw new DatabaseException("Residencial not found with ID: " + id);
+            throw new DataBaseException("Residencial não encontrado com ID: " + id);
         }
     }
 

@@ -3,7 +3,7 @@ package com.gestorcondominio.msresidencial.service;
 import com.gestorcondominio.msresidencial.dto.LazerDTO;
 import com.gestorcondominio.msresidencial.dto.ResidencialDTO;
 import com.gestorcondominio.msresidencial.entity.Residencial;
-import com.gestorcondominio.msresidencial.exception.service.DatabaseException;
+import com.gestorcondominio.msresidencial.exception.service.DataBaseException;
 import com.gestorcondominio.msresidencial.repository.ILazerRepository;
 import com.gestorcondominio.msresidencial.repository.IResidencialRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -74,7 +73,7 @@ public class ResidencialLazerService {
             );
 
         } catch (EntityNotFoundException  e){
-            throw new DatabaseException("Residencial not found with ID: " + id);
+            throw new DataBaseException("Residencial not found with ID: " + id);
         }
     }
 }

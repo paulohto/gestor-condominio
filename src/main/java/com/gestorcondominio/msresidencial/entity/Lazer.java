@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -15,7 +16,6 @@ public class Lazer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String descricao;
 
     @ManyToMany(mappedBy = "lazeres", fetch = FetchType.LAZY)
@@ -27,10 +27,9 @@ public class Lazer {
 
     public Lazer() {}
 
-    public Lazer(Long id, String descricao /*, Instant dataDeCriacao*/) {
+    public Lazer(Long id, String descricao ) {
         this.id = id;
         this.descricao = descricao;
-        //this.dataDeCriacao = dataDeCriacao;
     }
 
     public Set<Residencial> getResidenciais(){

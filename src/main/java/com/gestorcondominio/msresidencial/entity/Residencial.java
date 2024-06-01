@@ -26,7 +26,7 @@ public class Residencial {
 
     @ManyToMany (fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
     @JoinTable(
-            name = "residencial_lazer",
+            name = "tb_residencial_lazer",
             joinColumns = @JoinColumn(name = "residencial_id"),
             inverseJoinColumns = @JoinColumn(name = "lazer_id")
     )

@@ -2,6 +2,7 @@ package com.gestorcondominio.msresidencial.exception.controller;
 
 import com.gestorcondominio.msresidencial.exception.service.ControllerNotFoundException;
 import com.gestorcondominio.msresidencial.exception.service.DefaultError;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.gestorcondominio.msresidencial.exception.service.DatabaseException;
+import com.gestorcondominio.msresidencial.exception.service.DataBaseException;
 
 import java.time.Instant;
 
@@ -30,12 +31,24 @@ public class ControllerExceptionHandler {
     }
 
 
-    @ExceptionHandler(DatabaseException.class)
-    public ResponseEntity<DefaultError> entityNotFound(DatabaseException exception, HttpServletRequest request) {
+    @ExceptionHandler(DataBaseException.class)
+    public ResponseEntity<DefaultError> entityNotFound(DataBaseException exception, HttpServletRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
         error.setTimestamp(Instant.now());
         error.setStatus(status.value());
         error.setError("Database error");
+        error.setMessage(exception.getMessage());
+        error.setPath(request.getRequestURI());
+        return ResponseEntity.status(status).body(this.error);
+    }
+
+    //ADICIONADO
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<DefaultError> entityNotFound(EntityNotFoundException exception, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        error.setTimestamp(Instant.now());
+        error.setStatus(status.value());
+        error.setError("Entidade não encontrada");
         error.setMessage(exception.getMessage());
         error.setPath(request.getRequestURI());
         return ResponseEntity.status(status).body(this.error);
