@@ -1,11 +1,14 @@
 package com.gestorcondominio.msresidencial.service;
 
+import com.gestorcondominio.msresidencial.client.SindicoClient;
 import com.gestorcondominio.msresidencial.dto.LazerDTO;
 import com.gestorcondominio.msresidencial.dto.ResidencialDTO;
+import com.gestorcondominio.msresidencial.dto.SindicoDTO;
 import com.gestorcondominio.msresidencial.entity.Lazer;
 import com.gestorcondominio.msresidencial.entity.Residencial;
 import com.gestorcondominio.msresidencial.repository.ILazerRepository;
 import com.gestorcondominio.msresidencial.repository.IResidencialRepository;
+import feign.FeignException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,16 +23,21 @@ import java.util.logging.Logger;
 public class ResidencialService {
     private final IResidencialRepository residencialRepository;
     private final ILazerRepository lazerRepository;
-    public ResidencialService(IResidencialRepository residencialRepository, ILazerRepository lazerRepository) {
+    private final SindicoClient sindicoClient;
+    public ResidencialService(IResidencialRepository residencialRepository, ILazerRepository lazerRepository, SindicoClient sindicoClient) {
         this.residencialRepository = residencialRepository;
         this.lazerRepository = lazerRepository;
+        this.sindicoClient = sindicoClient;
     }
 
     @Transactional
     public ResidencialDTO saveResidencial(ResidencialDTO residencialDTO){
         Residencial entity = new Residencial();
         mapperDTOtoEntity(residencialDTO, entity);
+
         var residencialSaved = residencialRepository.save(entity);
+        SindicoDTO sindicoDTO = sindicoClient.getSindicoById(residencialDTO.getSindicoId());
+
         return new ResidencialDTO(residencialSaved, residencialSaved.getLazeres());
     }
 
@@ -63,8 +71,22 @@ public class ResidencialService {
 
     @Transactional
     public ResidencialDTO updateResidencial(Long id, ResidencialDTO residencialDTO){
-        // Remove todas as relações do ID, dentro do TRY apresentou inconsistência ao salvar no BD
+        // Remove todas as relações do ID, dentro do TRY. Apresentou inconsistência ao salvar no BD
         residencialRepository.deleteAllLazerRelations(id);
+
+        // Verifica se o síndico existe
+        Long sindicoId = residencialDTO.getSindicoId();
+        SindicoDTO sindicoDTO;
+
+        try {
+            sindicoDTO = sindicoClient.getSindicoById(sindicoId);
+        } catch (FeignException.NotFound e) {
+                throw new EntityNotFoundException("Síndico não encontrado com o ID fornecido.", e);
+        }
+
+        if (!sindicoDTO.getNome().equals(residencialDTO.getSindicoNome())) {
+            throw new EntityNotFoundException("Nome do síndico não corresponde ao ID fornecido.");
+        }
 
         try {
             Residencial residencialEntity = residencialRepository.findById(id)
@@ -79,6 +101,10 @@ public class ResidencialService {
                         .orElseThrow(() -> new EntityNotFoundException("Lazer não encontrado com o ID: " + lazerDTO.getId()));
                 residencialEntity.getLazeres().add(lazer);
             }
+
+            // Atualiza as informações do síndico
+            residencialEntity.setSindicoId(sindicoId);
+            residencialEntity.setSindicoNome(residencialDTO.getSindicoNome());
 
             // Atualiza os outros campos do Residencial
             residencialEntity.setNome(residencialDTO.getNome());
@@ -102,6 +128,7 @@ public class ResidencialService {
             residencialEntity = residencialRepository.save(residencialEntity);
 
             return new ResidencialDTO(residencialEntity, residencialEntity.getLazeres());
+
         } catch (EntityNotFoundException e) {
             throw new DataBaseException("Residencial ou Lazer não encontrado com os IDs fornecidos.");
         }
@@ -132,6 +159,11 @@ public class ResidencialService {
         entity.setBairro(dto.getBairro());
         entity.setCidade(dto.getCidade());
         entity.setUf(dto.getUf());
+
+        entity.setSindicoId(dto.getSindicoId());
+        entity.setSindicoNome(dto.getSindicoNome());
+        //entity.setSindicoTelefone(dto.getTelefone());
+        //entity.setSindicoEmail(dto.getEmail());
 
         entity.setValorCondominio(dto.getValorCondominio());
         entity.setElevador(dto.getElevador());

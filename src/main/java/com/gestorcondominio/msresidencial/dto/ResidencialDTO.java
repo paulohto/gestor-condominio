@@ -31,8 +31,14 @@ public class ResidencialDTO {
     @Size(min = 2, max =2 , message = "O estado deve ter exatamente 2 caracteres")
     private String uf;
 
-    //Sindico sindico;
     private List<LazerDTO> lazeres = new ArrayList<>();
+
+    //RELAÇÃO COM MS-SINDICO
+    private Long sindicoId;
+    private String sindicoNome;
+    //private String sindicoTelefone;
+    //private String sindicoEmail;
+
     private BigDecimal valorCondominio;
     private Boolean elevador;
     private String empresaPortaria;
@@ -49,12 +55,10 @@ public class ResidencialDTO {
 
     public ResidencialDTO(){}
 
-//    public ResidencialDTO(Long id, String nome, List<LazerDTO> lazereres) {
-//    }
-
     public ResidencialDTO(
             Long id, String nome, String endereco, String cep, String bairro, String cidade, String uf,
             List<LazerDTO> lazeres,
+            Long sindicoId, String sindicoNome,
             BigDecimal valorCondominio, Boolean elevador, String empresaPortaria, String empresaZeladoria,
             String empresaVigilancia, String empresaBoletos, int quantidadeUnidades, int quantidadePublico,
             int quantidadeUnidadesUtilizamApp, int quantidadeUnidadesComPet, int quantidadeUnidadesComVeiculo
@@ -69,6 +73,8 @@ public class ResidencialDTO {
         this.uf = uf;
 
         this.lazeres = lazeres;
+        this.sindicoId = sindicoId;
+        this.sindicoNome = sindicoNome;
 
         this.valorCondominio = valorCondominio;
         this.elevador = elevador;
@@ -91,6 +97,12 @@ public class ResidencialDTO {
                 this.bairro = entity.getBairro();
                 this.cidade = entity.getCidade();
                 this.uf = entity.getUf();
+
+                this.sindicoId = entity.getSindicoId();
+                this.sindicoNome = entity.getSindicoNome();
+                //this.sindicoTelefone = entity.getSindicoTelefone();
+                //this.sindicoEmail = entity.getSindicoEmail();
+
                 this.valorCondominio = entity.getValorCondominio();
                 this.elevador = entity.getElevador();
                 this.empresaPortaria = entity.getEmpresaPortaria();
@@ -111,25 +123,27 @@ public class ResidencialDTO {
         //this(residencial); // GUILHERME FIAP
         //lazeres.forEach(lazer -> this.lazeres.add(new LazerDTO(lazer))); // GUILHERME FIAP
 
-        this.id = residencial.getId();
-        this.nome = residencial.getNome();
-        this.endereco = residencial.getEndereco();
-        this.cep = residencial.getCep();
-        this.bairro = residencial.getBairro();
-        this.cidade = residencial.getCidade();
-        this.uf = residencial.getUf();
-        this.valorCondominio = residencial.getValorCondominio();
-        this.elevador = residencial.getElevador();
-        this.empresaPortaria = residencial.getEmpresaPortaria();
-        this.empresaZeladoria = residencial.getEmpresaZeladoria();
-        this.empresaVigilancia = residencial.getEmpresaVigilancia();
-        this.empresaBoletos = residencial.getEmpresaBoletos();
-        this.quantidadeUnidades = residencial.getQuantidadeUnidades();
-        this.quantidadePublico = residencial.getQuantidadePublico();
-        this.quantidadeUnidadesUtilizamApp = residencial.getQuantidadeUnidadesUtilizamApp();
-        this.quantidadeUnidadesComPet = residencial.getQuantidadeUnidadesComPet();
-        this.quantidadeUnidadesComVeiculo = residencial.getQuantidadeUnidadesComVeiculo();
+//        this.id = residencial.getId();
+//        this.nome = residencial.getNome();
+//        this.endereco = residencial.getEndereco();
+//        this.cep = residencial.getCep();
+//        this.bairro = residencial.getBairro();
+//        this.cidade = residencial.getCidade();
+//        this.uf = residencial.getUf();
+//
+//        this.valorCondominio = residencial.getValorCondominio();
+//        this.elevador = residencial.getElevador();
+//        this.empresaPortaria = residencial.getEmpresaPortaria();
+//        this.empresaZeladoria = residencial.getEmpresaZeladoria();
+//        this.empresaVigilancia = residencial.getEmpresaVigilancia();
+//        this.empresaBoletos = residencial.getEmpresaBoletos();
+//        this.quantidadeUnidades = residencial.getQuantidadeUnidades();
+//        this.quantidadePublico = residencial.getQuantidadePublico();
+//        this.quantidadeUnidadesUtilizamApp = residencial.getQuantidadeUnidadesUtilizamApp();
+//        this.quantidadeUnidadesComPet = residencial.getQuantidadeUnidadesComPet();
+//        this.quantidadeUnidadesComVeiculo = residencial.getQuantidadeUnidadesComVeiculo();
 
+        this(residencial);
         this.lazeres = lazeres.stream().map(LazerDTO::new).collect(Collectors.toList());
     }
 
@@ -142,5 +156,16 @@ public class ResidencialDTO {
         //this.lazeres = lazeres;
     }
 
+    // TESTE DE SÍNDICO
+    public Long getSindicoId() {
+        return sindicoId;
+    }
+//    public String getSindicoNome() {
+//        return sindicoNome;
+//    }
 
+    public void setSindico(SindicoDTO sindico) {
+        this.sindicoId = sindico.getId();
+        this.sindicoNome = sindico.getNome();
+    }
 }

@@ -58,6 +58,10 @@ public class ResidencialLazerService {
                     residencial.getCidade(),
                     residencial.getUf(),
                     lazerDTOs,
+
+                    residencial.getSindicoId(),
+                    residencial.getSindicoNome(),
+
                     residencial.getValorCondominio(),
                     residencial.getElevador(),
                     residencial.getEmpresaPortaria(),

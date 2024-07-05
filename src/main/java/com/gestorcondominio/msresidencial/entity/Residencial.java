@@ -24,6 +24,7 @@ public class Residencial {
     private String cidade;
     private String uf;
 
+    //RELAÇÃO COM ENTIDADE LAZER
     @ManyToMany (fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
     @JoinTable(
             name = "tb_residencial_lazer",
@@ -34,21 +35,23 @@ public class Residencial {
     @JsonManagedReference
     private Set<Lazer> lazeres = new HashSet<>();
 
+    // RELAÇÃO COM MS-SINDICO
+    private Long sindicoId;
+    private String sindicoNome;
+    //private String sindicoTelefone;
+    //private String sindicoEmail;
+
     private BigDecimal valorCondominio;
     private Boolean elevador;
-
     private String empresaPortaria;
     private String empresaZeladoria;
     private String empresaVigilancia;
     private String empresaBoletos;
-
     private int quantidadeUnidades;
     private int quantidadePublico;
-
     private int quantidadeUnidadesUtilizamApp;
     private int quantidadeUnidadesComPet;
     private int quantidadeUnidadesComVeiculo;
-
     @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
     private Instant dataDeCriacao;
 
@@ -64,6 +67,8 @@ public class Residencial {
             String uf,
 
             //Set<Lazer> lazeres,
+            Long sindicoId,
+            String sindicoNome,
 
             BigDecimal valorCondominio,
             boolean elevador,
@@ -89,6 +94,8 @@ public class Residencial {
         this.uf = uf;
 
         //this.lazeres = lazeres; //DELETAR
+        this.sindicoId = sindicoId;
+        this.sindicoNome = sindicoNome;
 
         this.valorCondominio = valorCondominio;
         this.elevador = elevador;
@@ -113,7 +120,6 @@ public class Residencial {
     public void prePersist() {
         dataDeCriacao = Instant.now();
     }
-    ///
 
     // Apesar de ter a @Data foi necessário incluir para evitar recursão
     @Override

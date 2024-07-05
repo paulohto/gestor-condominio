@@ -2,6 +2,7 @@ package com.gestorcondominio.msresidencial.exception.controller;
 
 import com.gestorcondominio.msresidencial.exception.service.ControllerNotFoundException;
 import com.gestorcondominio.msresidencial.exception.service.DefaultError;
+import feign.FeignException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,8 @@ public class ControllerExceptionHandler {
     private DefaultError error = new DefaultError();
 
     @ExceptionHandler(ControllerNotFoundException.class)
-    public ResponseEntity<DefaultError> entityNotFound(ControllerNotFoundException exception, HttpServletRequest request) {
+//    public ResponseEntity<DefaultError> entityNotFound(ControllerNotFoundException exception, HttpServletRequest request) {
+    public ResponseEntity<DefaultError> controllerNotFound(ControllerNotFoundException exception, HttpServletRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
         error.setTimestamp(Instant.now());
         error.setStatus(status.value());
@@ -32,7 +34,8 @@ public class ControllerExceptionHandler {
 
 
     @ExceptionHandler(DataBaseException.class)
-    public ResponseEntity<DefaultError> entityNotFound(DataBaseException exception, HttpServletRequest request) {
+   // public ResponseEntity<DefaultError> entityNotFound(DataBaseException exception, HttpServletRequest request) {
+    public ResponseEntity<DefaultError> databaseNotFound(DataBaseException exception, HttpServletRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
         error.setTimestamp(Instant.now());
         error.setStatus(status.value());
@@ -69,6 +72,21 @@ public class ControllerExceptionHandler {
         }
 
         return ResponseEntity.status(status).body(validacaoForm);
+    }
+
+    @ExceptionHandler(FeignException.class)
+    public ResponseEntity<DefaultError> handleFeignException(FeignException exception, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.resolve(exception.status());
+        if (status == null) {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        DefaultError error = new DefaultError();
+        error.setTimestamp(Instant.now());
+        error.setStatus(status.value());
+        error.setError("Erro de comunicação com serviço externo");
+        error.setMessage(exception.getMessage());
+        error.setPath(request.getRequestURI());
+        return ResponseEntity.status(status).body(error);
     }
 }
 

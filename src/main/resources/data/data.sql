@@ -19,43 +19,21 @@ CREATE TABLE IF NOT EXISTS tb_residencial (
     quantidade_unidades_utilizam_app INT,
     quantidade_unidades_com_pet INT,
     quantidade_unidades_com_veiculo INT,
+    sindico_id BIGINT,
+    sindico_nome VARCHAR(255),
+    --sindico_telefone VARCHAR(20),
+    --sindico_email VARCHAR(255),
 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Timestamp for creation time
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP -- Timestamp for last update time
 );
 
--- Adiciona índice na coluna "nome" para melhorar a performance de consultas
--- CREATE INDEX idx_nome ON tb_residencial (nome);
-
--- Reinicia a sequência para a tabela tb_residencial
--- ALTER SEQUENCE tb_residencial_id_seq RESTART WITH (SELECT COALESCE(MAX(id), 0) + 1 FROM tb_residencial);
 
 -- Criação da tabela tb_lazer
 CREATE TABLE IF NOT EXISTS tb_lazer (
     id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     descricao VARCHAR(255) NOT NULL
 );
-
--- Adiciona índice na coluna "descricao" para melhorar a performance de consultas
--- CREATE INDEX idx_descricao ON tb_lazer (descricao);
-
--- Reinicia a sequência para a tabela tb_lazer
--- ALTER SEQUENCE tb_lazer_id_seq RESTART WITH (SELECT COALESCE(MAX(id), 0) + 1 FROM tb_lazer);
-
--- Criação da tabela de associação residencial_lazer
--- CREATE TABLE IF NOT EXISTS residencial_lazer (
---    residencial_id BIGINT REFERENCES tb_residencial(id),
---    lazer_id BIGINT REFERENCES tb_lazer(id),
---    PRIMARY KEY (residencial_id, lazer_id)
---);
-
---CREATE TABLE IF NOT EXISTS residencial_lazer (
---    residencial_id BIGINT NOT NULL,
---    lazer_id BIGINT NOT NULL,
---    PRIMARY KEY (residencial_id, lazer_id),
---    FOREIGN KEY (residencial_id) REFERENCES residencial_id (id) ON DELETE CASCADE,
---    FOREIGN KEY (lazer_id) REFERENCES tb_lazer (id) ON DELETE CASCADE
---);
 
 CREATE TABLE IF NOT EXISTS tb_residencial_lazer (
     residencial_id BIGINT NOT NULL,
@@ -64,16 +42,3 @@ CREATE TABLE IF NOT EXISTS tb_residencial_lazer (
     FOREIGN KEY (residencial_id) REFERENCES tb_residencial (id) ON DELETE CASCADE,
     FOREIGN KEY (lazer_id) REFERENCES tb_lazer (id) ON DELETE CASCADE
 );
-
--- Adiciona índice nas colunas "residencial_id" e "lazer_id" para melhorar a performance de consultas
--- CREATE INDEX idx_residencial_id ON residencial_lazer (residencial_id);
--- CREATE INDEX idx_lazer_id ON residencial_lazer (lazer_id);
-
--- Adiciona as chaves estrangeiras
---ALTER TABLE residencial_lazer
---    ADD CONSTRAINT fk_residencial_id FOREIGN KEY (residencial_id) REFERENCES tb_residencial(id),
---    ADD CONSTRAINT fk_lazer_id FOREIGN KEY (lazer_id) REFERENCES tb_lazer(id);
-
--- Reinicia a sequência para a tabela residencial_lazer
--- ALTER SEQUENCE residencial_lazer_residencial_id_seq RESTART WITH (SELECT COALESCE(MAX(residencial_id), 0) + 1 FROM residencial_lazer);
--- ALTER SEQUENCE residencial_lazer_lazer_id_seq RESTART WITH (SELECT COALESCE(MAX(lazer_id), 0) + 1 FROM residencial_lazer);
