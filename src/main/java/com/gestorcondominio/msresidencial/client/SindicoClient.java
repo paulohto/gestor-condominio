@@ -7,6 +7,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 
 @FeignClient(name = "ms-sindico", url = "http://localhost:8081/sindico")
 public interface SindicoClient {
+
     @GetMapping("/findbyid/{id}")
     SindicoDTO getSindicoById(@PathVariable("id") Long id);
 }

@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS tb_residencial (
     quantidade_unidades_utilizam_app INT,
     quantidade_unidades_com_pet INT,
     quantidade_unidades_com_veiculo INT,
+    -- MS-SINDICO
     sindico_id BIGINT,
     sindico_nome VARCHAR(255),
     --sindico_telefone VARCHAR(20),

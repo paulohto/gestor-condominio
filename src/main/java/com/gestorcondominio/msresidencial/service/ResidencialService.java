@@ -24,6 +24,7 @@ public class ResidencialService {
     private final IResidencialRepository residencialRepository;
     private final ILazerRepository lazerRepository;
     private final SindicoClient sindicoClient;
+
     public ResidencialService(IResidencialRepository residencialRepository, ILazerRepository lazerRepository, SindicoClient sindicoClient) {
         this.residencialRepository = residencialRepository;
         this.lazerRepository = lazerRepository;
@@ -35,9 +36,23 @@ public class ResidencialService {
         Residencial entity = new Residencial();
         mapperDTOtoEntity(residencialDTO, entity);
 
-        var residencialSaved = residencialRepository.save(entity);
-        SindicoDTO sindicoDTO = sindicoClient.getSindicoById(residencialDTO.getSindicoId());
+        if (residencialDTO.getSindicoId() != null) {
+            // Verifica se o síndico existe
+            Long sindicoId = residencialDTO.getSindicoId();
+            SindicoDTO sindicoDTO;
 
+            try {
+                sindicoClient.getSindicoById(sindicoId);
+            } catch (FeignException.NotFound e) {
+                throw new EntityNotFoundException("Síndico não encontrado com o ID fornecido.", e);
+            }
+
+            sindicoDTO = sindicoClient.getSindicoById(residencialDTO.getSindicoId());
+            entity.setSindicoId(sindicoDTO.getId());
+            entity.setSindicoNome(sindicoDTO.getNome());
+        }
+
+        var residencialSaved = residencialRepository.save(entity);
         return new ResidencialDTO(residencialSaved, residencialSaved.getLazeres());
     }
 
@@ -56,7 +71,7 @@ public class ResidencialService {
                         () -> new DataBaseException("Residencial não encontrado com o ID: " + id)
                 );
 
-        // Agora vamos logar os detalhes dos Lazeres, se houver
+        // Logar os detalhes dos Lazeres, se houver
         if (residencial.getLazeres() != null && !residencial.getLazeres().isEmpty()) {
             logger.info("Lazeres encontrados para o residencial " + residencial.getNome() + ":");
             for (Lazer lazer : residencial.getLazeres()) {
@@ -67,6 +82,7 @@ public class ResidencialService {
         }
 
         return new ResidencialDTO( residencial, residencial.getLazeres() );
+
     }
 
     @Transactional
@@ -78,14 +94,16 @@ public class ResidencialService {
         Long sindicoId = residencialDTO.getSindicoId();
         SindicoDTO sindicoDTO;
 
-        try {
-            sindicoDTO = sindicoClient.getSindicoById(sindicoId);
-        } catch (FeignException.NotFound e) {
+        if( residencialDTO.getSindicoId() != null ) { //PERMITE BUSCAR RESIDENCIAL SEM SINDICO, OU DELETAR UM SÍNDICO
+            try {
+                sindicoDTO = sindicoClient.getSindicoById(sindicoId);
+            } catch (FeignException.NotFound e) {
                 throw new EntityNotFoundException("Síndico não encontrado com o ID fornecido.", e);
-        }
+            }
 
-        if (!sindicoDTO.getNome().equals(residencialDTO.getSindicoNome())) {
-            throw new EntityNotFoundException("Nome do síndico não corresponde ao ID fornecido.");
+            if (!sindicoDTO.getNome().equals(residencialDTO.getSindicoNome())) {
+                throw new EntityNotFoundException("Nome do síndico não corresponde ao ID fornecido.");
+            }
         }
 
         try {
@@ -159,11 +177,6 @@ public class ResidencialService {
         entity.setBairro(dto.getBairro());
         entity.setCidade(dto.getCidade());
         entity.setUf(dto.getUf());
-
-        entity.setSindicoId(dto.getSindicoId());
-        entity.setSindicoNome(dto.getSindicoNome());
-        //entity.setSindicoTelefone(dto.getTelefone());
-        //entity.setSindicoEmail(dto.getEmail());
 
         entity.setValorCondominio(dto.getValorCondominio());
         entity.setElevador(dto.getElevador());

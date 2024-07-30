@@ -53,13 +53,13 @@ public class ResidencialController {
             return ResponseEntity.notFound().build();
         }
 
-        // Obter informações do sindico
-        SindicoDTO sindico = sindicoClient.getSindicoById(residencialDTO.getSindicoId());
-        residencialDTO.setSindico(sindico);
-
+        // Obter informações do sindico caso exista Sindico cadastrado no Residencial
+        if(residencialDTO.getSindicoId() != null) {
+            SindicoDTO sindicoDTO = sindicoClient.getSindicoById(residencialDTO.getSindicoId());
+            residencialDTO.setSindico(sindicoDTO);
+        }
         return ResponseEntity.ok(residencialDTO);
     }
-
 
     @PutMapping("/update/{id}")
     public ResponseEntity<ResidencialDTO> updateResidencial(
